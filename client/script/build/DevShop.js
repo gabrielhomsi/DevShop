@@ -1,11 +1,7 @@
 var DevShop = React.createClass({displayName: "DevShop",
   getInitialState: function () {
     return {
-      developers: [
-        { username: 'brenoc', price: 224 },
-        { username: 'firstdoit', price: 416 },
-        { username: 'joe', price: 302 },
-      ]
+      developers: this.props.developers
     };
   },
 
