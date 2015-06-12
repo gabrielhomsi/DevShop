@@ -8,19 +8,22 @@ var AddDeveloperForm = React.createClass({displayName: "AddDeveloperForm",
 
   onUsernameChange: function (e) {
     this.setState({
+      // Current username value
       username: e.target.value
     })
   },
 
   onPriceChange: function (e) {
     this.setState({
+      // Current price value
       price: e.target.value
     })
   },
 
   onClick: function (e) {
+    // Preventing submit event
     e.preventDefault();
-    
+
     // Valid input check
     if (this.state.username == '' || this.state.price == '') {
       return;

@@ -1,10 +1,4 @@
-var developers = [
-  { username: 'brenoc', price: 224 },
-  { username: 'firstdoit', price: 416 },
-  { username: 'joe', price: 302 }
-];
-
 React.render(
-  React.createElement(DevShop, {developers: developers}),
+  React.createElement(DevShop, null),
   document.getElementById("dev-shop")
 );

@@ -1,33 +1,66 @@
 var DevShop = React.createClass({displayName: "DevShop",
   getInitialState: function () {
     return {
-      developers: this.props.developers
+      developers: []
     };
   },
 
-  addDeveloper: function (developer) {
-    var nextDevelopers = this.state.developers.concat([developer]);
+  // Reload state from the server
+  reloadDeveloperList: function () {
+    var _this = this;
 
-    this.setState({
-      developers: nextDevelopers
+    $.get('/api/developers/', function (developers) {
+      if (_this.isMounted()) {
+        _this.setState({
+          developers: developers
+        })
+      }
+    });
+  },
+
+  componentDidMount: function () {
+    this.reloadDeveloperList();
+  },
+
+  addDeveloper: function (developer) {
+    var _this = this;
+
+    $.post('/api/developers/', developer, function () {
+      var nextDevelopers = this.state.developers.concat([developer]);
+
+      this.setState({
+        developers: nextDevelopers
+      });
     });
   },
 
   removeDeveloper: function (index) {
-    var nextDevelopers = this.state.developers;
+    return $.ajax({
+      type: 'DELETE',
+      url: '/api/developers/',
+      data: { index: index },
+      success: function () {
+        var nextDevelopers = this.state.developers;
 
-    nextDevelopers.splice(index, 1);
+        nextDevelopers.splice(index, 1);
 
-    this.setState({
-      developers: nextDevelopers
+        this.setState({
+          developers: nextDevelopers
+        });
+      },
     });
   },
 
   render: function () {
     return React.createElement("div", {className: "container"}, 
       React.createElement(Header, null), 
+
       React.createElement(AddDeveloperForm, {onClick: this.addDeveloper}), 
-      React.createElement(Cart, {developers: this.state.developers, handleRemove: this.removeDeveloper}), 
+
+      React.createElement(Cart, {
+        developers: this.state.developers, 
+        handleRemove: this.removeDeveloper}), 
+
       React.createElement(Totalizer, {developers: this.state.developers})
     )
   }
