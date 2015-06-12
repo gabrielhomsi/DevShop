@@ -1,5 +1,5 @@
 var DevShop = React.createClass({
-  getInitialState: function() {
+  getInitialState: function () {
     return {
       developers: [
         { username: 'brenoc', price: 224 },
@@ -9,7 +9,7 @@ var DevShop = React.createClass({
     };
   },
 
-  addDeveloper: function(developer) {
+  addDeveloper: function (developer) {
     var nextDevelopers = this.state.developers.concat([developer]);
 
     this.setState({
@@ -17,11 +17,21 @@ var DevShop = React.createClass({
     });
   },
 
-  render: function() {
+  removeDeveloper: function (index) {
+    var nextDevelopers = this.state.developers;
+
+    nextDevelopers.splice(index, 1);
+
+    this.setState({
+      developers: nextDevelopers
+    });
+  },
+
+  render: function () {
     return <div className="container">
       <Header/>
       <AddDeveloperForm onClick={this.addDeveloper}/>
-      <Cart developers={this.state.developers}/>
+      <Cart developers={this.state.developers} handleRemove={this.removeDeveloper}/>
       <Totalizer developers={this.state.developers}/>
     </div>
   }

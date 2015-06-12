@@ -1,5 +1,5 @@
 var Totalizer = React.createClass({
-  render: function() {
+  render: function () {
     var sumPrice = function (carry, developer) {
       return carry + developer.price;
     };

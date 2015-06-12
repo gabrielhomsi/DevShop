@@ -1,10 +1,16 @@
 var Cart = React.createClass({
-  render: function() {
-    var createCartItem = function (developer) {
+  handleRemove: function (i) {
+    this.props.handleRemove(i);
+  },
+
+  render: function () {
+    var _this = this;
+
+    var createCartItem = function (developer, i) {
       return <tr className="product">
         <td>{developer.username}</td>
         <td>${developer.price}</td>
-        <td><button className="btn btn-danger pull-right">Remove</button></td>
+        <td><button onClick={_this.handleRemove.bind(_this, i)} className="btn btn-danger pull-right">Remove</button></td>
       </tr>;
     };
 

@@ -1,30 +1,30 @@
 var AddDeveloperForm = React.createClass({
-  getInitialState: function() {
+  getInitialState: function () {
     return {
       username: '',
       price: ''
     }
   },
 
-  onUsernameChange: function(e) {
+  onUsernameChange: function (e) {
     this.setState({
       username: e.target.value
     })
   },
 
-  onPriceChange: function(e) {
+  onPriceChange: function (e) {
     this.setState({
       price: e.target.value
     })
   },
 
-  onClick: function(e) {
+  onClick: function (e) {
+    e.preventDefault();
+    
     // Valid input check
     if (this.state.username == '' || this.state.price == '') {
       return;
     }
-
-    e.preventDefault();
 
     this.props.onClick({
       username: this.state.username,
@@ -37,7 +37,7 @@ var AddDeveloperForm = React.createClass({
     });
   },
 
-  render: function() {
+  render: function () {
     return <div className="row">
       <h2>Add a developer</h2>
       <form className="form-inline" role="form">

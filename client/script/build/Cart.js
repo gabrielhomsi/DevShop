@@ -1,10 +1,16 @@
 var Cart = React.createClass({displayName: "Cart",
-  render: function() {
-    var createCartItem = function (developer) {
+  handleRemove: function (i) {
+    this.props.handleRemove(i);
+  },
+
+  render: function () {
+    var _this = this;
+
+    var createCartItem = function (developer, i) {
       return React.createElement("tr", {className: "product"}, 
         React.createElement("td", null, developer.username), 
         React.createElement("td", null, "$", developer.price), 
-        React.createElement("td", null, React.createElement("button", {className: "btn btn-danger pull-right"}, "Remove"))
+        React.createElement("td", null, React.createElement("button", {onClick: _this.handleRemove.bind(_this, i), className: "btn btn-danger pull-right"}, "Remove"))
       );
     };
 
