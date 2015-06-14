@@ -1,4 +1,5 @@
-var developers = [];
+var request = require("request"),
+    developers = [];
 
 exports.Model = {
   initialize: function (_developers) {

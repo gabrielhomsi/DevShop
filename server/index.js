@@ -4,12 +4,13 @@ var express = require("express"),
     routes = require("./routes")
     Developer = require("./models/Developer").Model;
 
-var app = express(),
-    GITHUB_API_URL = "https://api.github.com",
-    GITHUB_CLIENT_AND_SECRET_KEYS = "?client_id=" +
-      process.env.GITHUB_CLIENT_ID +
-      "&client_secret=" +
-      process.env.GITHUB_CLIENT_SECRET;
+var app = express();
+
+global.GITHUB_API_URL = "https://api.github.com";
+global.GITHUB_CLIENT_AND_SECRET_KEYS = "?client_id=" +
+  process.env.GITHUB_CLIENT_ID +
+  "&client_secret=" +
+  process.env.GITHUB_CLIENT_SECRET;
 
 if (process.argv.slice(2).length == 0 || process.argv[2] != "test") {
   request.get({
