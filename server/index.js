@@ -3,13 +3,14 @@ var express = require("express"),
     request = require("request");
 
 var app = express(),
-    GITHUB_API_URL = "https://api.github.com";
+    GITHUB_API_URL = "https://api.github.com",
+    GITHUB_CLIENT_AND_SECRET_KEYS = "?client_id=xxxx&client_secret=yyyy";
 
 var developers = [{"username":"brenoc","price":224},{"username":"firstdoit","price":416},{"username":"joe","price":302}],
     addDeveloper = function (developer, res) {
       if (developer.inferPriceFromGitHub === true) {
         request.get({
-          uri: GITHUB_API_URL + "/users/" + developer.username,
+          uri: GITHUB_API_URL + "/users/" + developer.username + GITHUB_CLIENT_AND_SECRET_KEYS,
           method: "GET",
           headers: {"user-agent": "node.js"}
         }, function (err, _res, body) {
@@ -39,22 +40,22 @@ var developers = [{"username":"brenoc","price":224},{"username":"firstdoit","pri
       }
     };
 
-// console.log("Populating developers array based on GitHub organization members...");
-// request.get({
-//   uri: GITHUB_API_URL + "/orgs/github/members",
-//   method: "GET",
-//   headers: {"user-agent": "node.js"}
-// }, function (err, res, body) {
-//   var members = JSON.parse(body);
-//
-//   members.forEach(function (member) {
-//     console.log("Infering " + member.login + "'s price...");
-//     addDeveloper({
-//       username: member.login,
-//       inferPriceFromGitHub: true
-//     }, null);
-//   });
-// });
+console.log("Populating developers array based on GitHub organization members...");
+request.get({
+  uri: GITHUB_API_URL + "/orgs/github/members" + GITHUB_CLIENT_AND_SECRET_KEYS,
+  method: "GET",
+  headers: {"user-agent": "node.js"}
+}, function (err, res, body) {
+  var members = JSON.parse(body);
+
+  members.forEach(function (member) {
+    console.log("Infering " + member.login + "'s price...");
+    addDeveloper({
+      username: member.login,
+      inferPriceFromGitHub: true
+    }, null);
+  });
+});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
