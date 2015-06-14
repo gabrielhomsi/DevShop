@@ -1,7 +1,11 @@
 var express = require("express"),
-    app = express(),
     bodyParser = require("body-parser"),
-    developers = [
+    request = require("request");
+
+var app = express(),
+    GITHUB_API_URL = "https://api.github.com/users/";
+
+var developers = [
       { username: "brenoc", price: 224 },
       { username: "firstdoit", price: 416 },
       { username: "joe", price: 302 }
@@ -25,10 +29,28 @@ router.route("/developers")
 
   // Developer creation
   .post(function (req, res) {
-    developers.push({
-      username: req.body.username,
-      price: parseInt(req.body.price)
-    });
+    if (req.body.inferPriceFromGitHub === 'true') {
+      request.get({
+        uri: GITHUB_API_URL + req.body.username,
+        method: "GET",
+        headers: {"user-agent": "node.js"}
+      }, function (err, res, body) {
+        var profile = JSON.parse(body);
+
+        developers.push({
+          username: req.body.username,
+          price: 30 * (parseInt(profile.public_repos) +
+            parseInt(profile.public_gists) +
+            parseInt(profile.followers) +
+            parseInt(profile.following))
+        });
+      });
+    } else {
+      developers.push({
+        username: req.body.username,
+        price: parseInt(req.body.price)
+      });
+    }
 
     res.json({ message: "A new developer was created."});
   });
@@ -37,7 +59,6 @@ router.route("/developers/:developer_index")
   // Developer removal
   .delete(function (req, res) {
     developers.splice(parseInt(req.params.developer_index), 1);
-    console.log(developers);
 
     res.json({ message: "Removed developer with index " + req.params.developer_index + "." });
   });

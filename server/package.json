@@ -9,7 +9,8 @@
   "dependencies": {
     "express": "~4.9.x",
     "body-parser": "~1.x",
-    "frisby": "*"
+    "request": "~2.x",
+    "frisby": "~0.x"
   },
   "engines": {
     "node": "0.12.2"
