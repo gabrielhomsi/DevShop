@@ -26,11 +26,16 @@ var DevShop = React.createClass({
     var _this = this;
 
     $.post('/api/developers/', developer, function () {
-      var nextDevelopers = _this.state.developers.concat([developer]);
+      if (developer.inferPriceFromGitHub == true) {
+        // Since we don't know the new developer's price, another api call is necessary
+        _this.reloadDeveloperList();
+      } else {
+        var nextDevelopers = _this.state.developers.concat([developer]);
 
-      _this.setState({
-        developers: nextDevelopers
-      });
+        _this.setState({
+          developers: nextDevelopers
+        });
+      }
     });
   },
 
