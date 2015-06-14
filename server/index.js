@@ -4,7 +4,10 @@ var express = require("express"),
 
 var app = express(),
     GITHUB_API_URL = "https://api.github.com",
-    GITHUB_CLIENT_AND_SECRET_KEYS = "?client_id=xxxx&client_secret=yyyy";
+    GITHUB_CLIENT_AND_SECRET_KEYS = "?client_id=" +
+      process.env.GITHUB_CLIENT_ID +
+      "&client_secret=" +
+      process.env.GITHUB_CLIENT_SECRET;
 
 var developers = [{"username":"brenoc","price":224},{"username":"firstdoit","price":416},{"username":"joe","price":302}],
     addDeveloper = function (developer, res) {
@@ -41,6 +44,7 @@ var developers = [{"username":"brenoc","price":224},{"username":"firstdoit","pri
     };
 
 console.log("Populating developers array based on GitHub organization members...");
+
 request.get({
   uri: GITHUB_API_URL + "/orgs/github/members" + GITHUB_CLIENT_AND_SECRET_KEYS,
   method: "GET",
@@ -60,7 +64,7 @@ request.get({
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.set("port", (process.env.PORT || 80));
+app.set("port", (process.env.PORT || 5000));
 
 // Static files (index.html, React components, JavaScript libraries and main.css)
 app.use(express.static(__dirname + "/../client"));
