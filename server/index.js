@@ -9,7 +9,7 @@ var app = express(),
       "&client_secret=" +
       process.env.GITHUB_CLIENT_SECRET;
 
-var developers = [{"username":"brenoc","price":224},{"username":"firstdoit","price":416},{"username":"joe","price":302}],
+var developers = [],
     addDeveloper = function (developer, res) {
       if (developer.inferPriceFromGitHub === true) {
         request.get({
@@ -42,8 +42,6 @@ var developers = [{"username":"brenoc","price":224},{"username":"firstdoit","pri
         }
       }
     };
-
-console.log("Populating developers array based on GitHub organization members...");
 
 request.get({
   uri: GITHUB_API_URL + "/orgs/github/members" + GITHUB_CLIENT_AND_SECRET_KEYS,
