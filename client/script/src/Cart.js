@@ -7,27 +7,18 @@ var Cart = React.createClass({
     var _this = this;
 
     var createCartItem = function (developer, i) {
-      return <tr className="product">
-        <td>{developer.username}</td>
-        <td>${developer.price}</td>
-        <td><button onClick={_this.handleRemove.bind(_this, i)} className="btn btn-danger pull-right">Remove</button></td>
-      </tr>;
+      return {
+        Username: developer.username,
+        Price: "$" + developer.price
+      };
     };
 
     return <div className="cart row">
       <h2>Cart</h2>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Username</th>
-            <th>Price</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {this.props.developers.map(createCartItem)}
-        </tbody>
-      </table>
+      <Reactable.Table
+        className="table"
+        data={this.props.developers.map(createCartItem)}
+        itemsPerPage={5}/>
     </div>;
   }
 });
