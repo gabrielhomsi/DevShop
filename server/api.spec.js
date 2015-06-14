@@ -15,7 +15,21 @@ frisby.create("GET developer")
           .get(URL + "/developers")
           .expectStatus(200)
           .expectJSON([{"username":"firstdoit","price":416},{"username":"joe","price":302}])
-          .toss();
-      }).toss();
+          .afterJSON(function () {
+            frisby.create("POST developer")
+              .post(URL + "/developers", { username: "Bob", price: 123 })
+              .expectStatus(200)
+              .afterJSON(function () {
+                frisby.create("GET developer")
+                  .get(URL + "/developers")
+                  .expectStatus(200)
+                  .expectJSON([{"username":"firstdoit","price":416},{"username":"joe","price":302}, {"username":"Bob","price":123}])
+                .toss();
+              })
+            .toss();
+          })
+        .toss();
+      })
+    .toss();
   })
 .toss();

@@ -3,13 +3,58 @@ var express = require("express"),
     request = require("request");
 
 var app = express(),
-    GITHUB_API_URL = "https://api.github.com/users/";
+    GITHUB_API_URL = "https://api.github.com";
 
-var developers = [
-      { username: "brenoc", price: 224 },
-      { username: "firstdoit", price: 416 },
-      { username: "joe", price: 302 }
-    ];
+var developers = [{"username":"brenoc","price":224},{"username":"firstdoit","price":416},{"username":"joe","price":302}],
+    addDeveloper = function (developer, res) {
+      if (developer.inferPriceFromGitHub === true) {
+        request.get({
+          uri: GITHUB_API_URL + "/users/" + developer.username,
+          method: "GET",
+          headers: {"user-agent": "node.js"}
+        }, function (err, _res, body) {
+          var profile = JSON.parse(body);
+
+          developers.push({
+            username: developer.username,
+            price: 30 * (parseInt(profile.public_repos) +
+              parseInt(profile.public_gists) +
+              parseInt(profile.followers) +
+              parseInt(profile.following))
+          });
+
+          if (res != null) {
+            res.json({ message: "A new developer (w/ price inference) was created."});
+          }
+        });
+      } else {
+        developers.push({
+          username: developer.username,
+          price: developer.price
+        });
+
+        if (res != null) {
+          res.json({ message: "A new developer was created."});
+        }
+      }
+    };
+
+// console.log("Populating developers array based on GitHub organization members...");
+// request.get({
+//   uri: GITHUB_API_URL + "/orgs/github/members",
+//   method: "GET",
+//   headers: {"user-agent": "node.js"}
+// }, function (err, res, body) {
+//   var members = JSON.parse(body);
+//
+//   members.forEach(function (member) {
+//     console.log("Infering " + member.login + "'s price...");
+//     addDeveloper({
+//       username: member.login,
+//       inferPriceFromGitHub: true
+//     }, null);
+//   });
+// });
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -29,30 +74,11 @@ router.route("/developers")
 
   // Developer creation
   .post(function (req, res) {
-    if (req.body.inferPriceFromGitHub === 'true') {
-      request.get({
-        uri: GITHUB_API_URL + req.body.username,
-        method: "GET",
-        headers: {"user-agent": "node.js"}
-      }, function (err, res, body) {
-        var profile = JSON.parse(body);
-
-        developers.push({
-          username: req.body.username,
-          price: 30 * (parseInt(profile.public_repos) +
-            parseInt(profile.public_gists) +
-            parseInt(profile.followers) +
-            parseInt(profile.following))
-        });
-      });
-    } else {
-      developers.push({
-        username: req.body.username,
-        price: parseInt(req.body.price)
-      });
-    }
-
-    res.json({ message: "A new developer was created."});
+    addDeveloper({
+      username: req.body.username,
+      price: parseInt(req.body.price),
+      inferPriceFromGitHub: req.body.inferPriceFromGitHub === "true"
+    }, res);
   });
 
 router.route("/developers/:developer_index")
