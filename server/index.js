@@ -60,7 +60,7 @@ request.get({
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.set("port", (process.env.PORT || 5000));
+app.set("port", (process.env.PORT || 80));
 
 // Static files (index.html, React components, JavaScript libraries and main.css)
 app.use(express.static(__dirname + "/../client"));
