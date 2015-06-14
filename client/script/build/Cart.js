@@ -9,7 +9,8 @@ var Cart = React.createClass({displayName: "Cart",
     var createCartItem = function (developer, i) {
       return {
         Username: developer.username,
-        Price: "$" + developer.price
+        Price: "$" + developer.price,
+        '': React.createElement("button", {onClick: _this.handleRemove.bind(_this, i), className: "btn btn-danger pull-right"}, "Remove")
       };
     };
 
