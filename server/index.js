@@ -37,6 +37,7 @@ router.route("/developers/:developer_index")
   // Developer removal
   .delete(function (req, res) {
     developers.splice(parseInt(req.params.developer_index), 1);
+    console.log(developers);
 
     res.json({ message: "Removed developer with index " + req.params.developer_index + "." });
   });
