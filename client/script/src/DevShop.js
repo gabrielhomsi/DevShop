@@ -26,25 +26,27 @@ var DevShop = React.createClass({
     var _this = this;
 
     $.post('/api/developers/', developer, function () {
-      var nextDevelopers = this.state.developers.concat([developer]);
+      var nextDevelopers = _this.state.developers.concat([developer]);
 
-      this.setState({
+      _this.setState({
         developers: nextDevelopers
       });
     });
   },
 
   removeDeveloper: function (index) {
+    var _this = this;
+
     return $.ajax({
       type: 'DELETE',
-      url: '/api/developers/',
+      url: '/api/developers/' + index,
       data: { index: index },
       success: function () {
-        var nextDevelopers = this.state.developers;
+        var nextDevelopers = _this.state.developers;
 
         nextDevelopers.splice(index, 1);
 
-        this.setState({
+        _this.setState({
           developers: nextDevelopers
         });
       },
